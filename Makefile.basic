@@ -23,5 +23,5 @@ LDFLAGS=$(LINK_DIRS) $(LINK_FLAGS)
 PROGRAM=<program name here>
 
 bin/$(PROGRAM): $(PROGRAM).cpp
-	mkdir -p @(D)
+	@mkdir -p bin
 	$(CXX) $(DEBUG_FLAGS) $(CXXFLAGS) -o bin/$(PROGRAM) $^ $(LDFLAGS)
