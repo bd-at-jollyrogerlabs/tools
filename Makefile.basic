@@ -1,27 +1,46 @@
 
-CXX=g++
-#CXX=clang++
+COMPILER=g++
+#COMPILER=clang++
 
-DEBUG_FLAGS=-ggdb -O0
+# Change C++ standard here, if necessary (e.g. "-std=c++14")
+#CPPSTANDARD=c++98
+#CPPSTANDARD=c++0x
+#CPPSTANDARD=c++11
+CPPSTANDARD=c++14
 
-RELEASE_FLAGS=-O3
+# Add extra includes here, if necessary
+EXTRA_INCLUDES=
 
-STD_FLAGS=-std=c++14
+# add extra warning flags here, if necessary
+WARNING_FLAGS=-Wall
 
-WARN_FLAGS=-Wall
+# add extra build type flags here, if necessary
+BUILD_TYPE_FLAGS=-g -O0
+#BUILD_TYPE_FLAGS=-g -O3
 
-INCLUDES=
+# Add extra LDFLAGS here, if necessary
+LDFLAGS=
 
-LINK_DIRS=
+CXX=$(COMPILER)
+CXXFLAGS=\
+        -std=$(CPPSTANDARD) \
+        $(WARNING_FLAGS) \
+	$(BUILD_TYPE_FLAGS) \
+        $(EXTRA_INCLUDES)
 
-LINK_FLAGS=
+PROGRAM= ####### <program goes here> #######
 
-CXXFLAGS=$(STD_FLAGS) $(INCLUDES)
+SOURCES=\
+        $(PROGRAM).cpp
 
-LDFLAGS=$(LINK_DIRS) $(LINK_FLAGS)
+all: .dir-locals.el bin/$(PROGRAM)
 
-PROGRAM=<program name here>
+.PHONY: all
 
-bin/$(PROGRAM): $(PROGRAM).cpp
-	@mkdir -p bin
-	$(CXX) $(DEBUG_FLAGS) $(CXXFLAGS) -o bin/$(PROGRAM) $^ $(LDFLAGS)
+# Settings for flycheck to work correctly
+.dir-locals.el: Makefile
+        @/bin/echo "((c++-mode (flycheck-c/c++-$(BASE_COMPILER)-executable . \"$(CXX)\") (flycheck-$(BASE_COMPILER)-include-path . (\"$(COMPILER_ROOT)/include/\")) (flycheck-$(BASE_COMPILER)-language-standard . \"$(CPPSTANDARD)\") (flycheck-$(BASE_COMPILER)-definitions . (\"__USE_XOPEN2K8\"))))" > .dir-locals.el
+
+bin/$(PROGRAM): $(SOURCES)
+        @/bin/mkdir -p $(@D)
+        $(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
