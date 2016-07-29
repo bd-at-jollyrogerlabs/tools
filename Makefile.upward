@@ -1,0 +1,12 @@
+##############################
+#
+# Execute a recursive call to make one directory above the current
+# one.
+#
+##############################
+
+# A copy of this file should be placed in a source directory that does
+# not have its own Makefile.
+
+%::
+	$(MAKE) -C .. $(MAKECMDGOALS)
